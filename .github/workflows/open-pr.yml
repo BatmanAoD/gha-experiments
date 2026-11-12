@@ -1,0 +1,38 @@
+name: open-pr
+# Opens a PR with GITHUB_TOKEN (like `release-plz release-pr`),
+# or with `push-only`, pushes another commit to that PR's branch.
+on:
+  workflow_dispatch:
+    inputs:
+      push-only:
+        type: boolean
+        default: false
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  open:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          PUSH_ONLY: ${{ inputs.push-only }}
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          branch=bot-pr
+          if [[ "${PUSH_ONLY}" == "true" ]]; then
+            git fetch origin "${branch}"
+            git checkout "${branch}"
+          else
+            git checkout -b "${branch}"
+          fi
+          date -u > stamp.txt
+          git add stamp.txt
+          git commit -m "test: bot commit ${GITHUB_RUN_ID}"
+          git push origin "${branch}"
+          if [[ "${PUSH_ONLY}" != "true" ]]; then
+            gh pr create --head "${branch}" --title "test: PR opened by GITHUB_TOKEN" --body "Scratch test."
+          fi

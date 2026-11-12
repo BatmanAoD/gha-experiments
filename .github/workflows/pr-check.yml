@@ -1,0 +1,8 @@
+name: pr-check
+on:
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "event=${{ github.event_name }} action=${{ github.event.action }} actor=${{ github.actor }}"
