@@ -1,0 +1,14 @@
+name: outer
+on:
+  workflow_call:
+jobs:
+  # Test 1: nested reusable workflow by local path.
+  nested:
+    uses: ./.github/workflows/inner.yml
+  # Test 2: step-level local composite action after a default checkout.
+  step-local:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "checked out ${GITHUB_REPOSITORY} at ${GITHUB_SHA}"
+      - uses: ./actions/hello

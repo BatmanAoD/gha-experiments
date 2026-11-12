@@ -1,0 +1,7 @@
+name: hello
+description: Prints which repo's copy of this action ran.
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: echo "HELLO_MARKER=EXPERIMENTS-ONE"
