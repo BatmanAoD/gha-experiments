@@ -5,4 +5,4 @@ jobs:
   report:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "INNER_MARKER=ONE"
+      - run: echo "INNER_MARKER=TWO"
